@@ -117,7 +117,7 @@ class TestFileJpeg:
 
     @pytest.mark.parametrize(
         "test_image_path",
-        [TEST_FILE, "Tests/images/pil_sample_cmyk.jpg"],
+        (TEST_FILE, "Tests/images/pil_sample_cmyk.jpg"),
     )
     def test_dpi(self, test_image_path):
         def test(xdpi, ydpi=None):
@@ -524,6 +524,7 @@ class TestFileJpeg:
                     None
                 )
             ]
+
             # list of qtable lists
             assert_image_similar(
                 im,
@@ -603,7 +604,7 @@ class TestFileJpeg:
 
     def test_convert_dict_qtables_deprecation(self):
         with pytest.warns(DeprecationWarning):
-            qtable = {0: [1, 2, 3, 4]}
+            qtable = {0: (1, 2, 3, 4)}
             qtable2 = JpegImagePlugin.convert_dict_qtables(qtable)
             assert qtable == qtable2
 

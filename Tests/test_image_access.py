@@ -345,7 +345,7 @@ class TestCffi(AccessTest):
 
     @pytest.mark.parametrize("mode", ("P", "PA"))
     def test_p_putpixel_rgb_rgba(self, mode):
-        for color in [(255, 0, 0), (255, 0, 0, 127)]:
+        for color in ((255, 0, 0), (255, 0, 0, 127)):
             im = Image.new(mode, (1, 1))
             access = PyAccess.new(im, False)
             access.putpixel((0, 0), color)
@@ -355,9 +355,9 @@ class TestCffi(AccessTest):
 
 
 class TestImagePutPixelError(AccessTest):
-    IMAGE_MODES1 = ["L", "LA", "RGB", "RGBA"]
-    IMAGE_MODES2 = ["I", "I;16", "BGR;15"]
-    INVALID_TYPES = ["foo", 1.0, None]
+    IMAGE_MODES1 = ("L", "LA", "RGB", "RGBA")
+    IMAGE_MODES2 = ("I", "I;16", "BGR;15")
+    INVALID_TYPES = ("foo", 1.0, None)
 
     @pytest.mark.parametrize("mode", IMAGE_MODES1)
     def test_putpixel_type_error1(self, mode):

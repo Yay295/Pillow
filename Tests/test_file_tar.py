@@ -11,10 +11,10 @@ TEST_TAR_FILE = "Tests/images/hopper.tar"
 
 
 def test_sanity():
-    for codec, test_path, format in [
-        ["zlib", "hopper.png", "PNG"],
-        ["jpg", "hopper.jpg", "JPEG"],
-    ]:
+    for codec, test_path, format in (
+        ("zlib", "hopper.png", "PNG"),
+        ("jpg", "hopper.jpg", "JPEG"),
+    ):
         if features.check(codec):
             with TarIO.TarIO(TEST_TAR_FILE, test_path) as tar:
                 with Image.open(tar) as im:

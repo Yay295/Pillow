@@ -28,14 +28,14 @@ Y0 = int(H / 4)
 Y1 = int(X0 * 3)
 
 # Two kinds of bounding box
-BBOX1 = [(X0, Y0), (X1, Y1)]
-BBOX2 = [X0, Y0, X1, Y1]
+BBOX1 = ((X0, Y0), (X1, Y1))
+BBOX2 = (X0, Y0, X1, Y1)
 
 # Two kinds of coordinate sequences
-POINTS1 = [(10, 10), (20, 40), (30, 30)]
-POINTS2 = [10, 10, 20, 40, 30, 30]
+POINTS1 = ((10, 10), (20, 40), (30, 30))
+POINTS2 = (10, 10, 20, 40, 30, 30)
 
-KITE_POINTS = [(10, 50), (70, 10), (90, 50), (70, 90), (10, 50)]
+KITE_POINTS = ((10, 50), (70, 10), (90, 50), (70, 90), (10, 50))
 
 FONT_PATH = "Tests/fonts/FreeMono.ttf"
 
@@ -143,7 +143,7 @@ def test_big_rectangle():
     # Test drawing a rectangle bigger than the image
     # Arrange
     im = Image.new("RGB", (W, H))
-    bbox = [(-1, -1), (W + 1, H + 1)]
+    bbox = ((-1, -1), (W + 1, H + 1))
     brush = ImageDraw2.Brush("orange")
     draw = ImageDraw2.Draw(im)
     expected = "Tests/images/imagedraw_big_rectangle.png"

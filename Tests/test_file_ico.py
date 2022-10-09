@@ -44,7 +44,7 @@ def test_invalid_file():
 def test_save_to_bytes():
     output = io.BytesIO()
     im = hopper()
-    im.save(output, "ico", sizes=[(32, 32), (64, 64)])
+    im.save(output, "ico", sizes=((32, 32), (64, 64)))
 
     # The default image
     output.seek(0)
@@ -122,7 +122,7 @@ def test_different_bit_depths(tmp_path):
 def test_save_to_bytes_bmp(mode):
     output = io.BytesIO()
     im = hopper(mode)
-    im.save(output, "ico", bitmap_format="bmp", sizes=[(32, 32), (64, 64)])
+    im.save(output, "ico", bitmap_format="bmp", sizes=((32, 32), (64, 64)))
 
     # The default image
     output.seek(0)
@@ -188,7 +188,7 @@ def test_save_append_images(tmp_path):
     im = hopper("RGBA")
     provided_im = Image.new("RGBA", (32, 32), (255, 0, 0))
     outfile = str(tmp_path / "temp_saved_multi_icon.ico")
-    im.save(outfile, sizes=[(32, 32), (128, 128)], append_images=[provided_im])
+    im.save(outfile, sizes=((32, 32), (128, 128)), append_images=[provided_im])
 
     with Image.open(outfile) as reread:
         assert_image_equal(reread, hopper("RGBA"))

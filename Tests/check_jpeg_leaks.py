@@ -110,7 +110,7 @@ def test_qtables_leak():
         )
     ]
 
-    qtables = [standard_l_qtable, standard_chrominance_qtable]
+    qtables = (standard_l_qtable, standard_chrominance_qtable)
 
     for _ in range(iterations):
         test_output = BytesIO()

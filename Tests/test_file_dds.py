@@ -288,10 +288,10 @@ def test_save_unsupported_mode(tmp_path):
 
 @pytest.mark.parametrize(
     ("mode", "test_file"),
-    [
+    (
         ("RGB", "Tests/images/hopper.png"),
         ("RGBA", "Tests/images/pil123rgba.png"),
-    ],
+    ),
 )
 def test_save(mode, test_file, tmp_path):
     out = str(tmp_path / "temp.dds")
