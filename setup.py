@@ -83,6 +83,7 @@ _LIB_IMAGING = (
     "GifEncode",
     "HexDecode",
     "Histo",
+    "ImageFormat",
     "JpegDecode",
     "JpegEncode",
     "Matrix",
