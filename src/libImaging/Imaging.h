@@ -51,6 +51,8 @@ extern "C" {
  * extensions, see http://www.effbot.org/zone/pil-extending.htm
  */
 
+#include "ImageFormat.h"
+
 /* Handles */
 
 typedef struct ImagingMemoryInstance *Imaging;
@@ -84,7 +86,10 @@ struct ImagingMemoryInstance {
     int type;                       /* Data type (IMAGING_TYPE_*) */
     int depth;                      /* Depth (ignored in this version) */
     int bands;                      /* Number of bands (1, 2, 3, or 4) */
-    int xsize;                      /* Image dimension. */
+    const struct ImageFormat *format;
+
+    /* Image dimensions */
+    int xsize;
     int ysize;
 
     /* Colour palette (for "P" images only) */
