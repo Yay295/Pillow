@@ -471,7 +471,7 @@ getpixel(Imaging im, ImagingAccess access, int x, int y) {
         case IMAGING_TYPE_FLOAT32:
             return PyFloat_FromDouble(pixel.f);
         case IMAGING_TYPE_SPECIAL:
-            if (strncmp(im->mode, "I;16", 4) == 0) {
+            if (strncmp(im->format->name, "I;16", 4) == 0) {
                 return PyLong_FromLong(pixel.h);
             }
             break;
@@ -584,7 +584,7 @@ getink(PyObject *color, Imaging im, char *ink) {
             memcpy(ink, &ftmp, sizeof(ftmp));
             return ink;
         case IMAGING_TYPE_SPECIAL:
-            if (strncmp(im->mode, "I;16", 4) == 0) {
+            if (strncmp(im->format->name, "I;16", 4) == 0) {
                 ink[0] = (UINT8)r;
                 ink[1] = (UINT8)(r >> 8);
                 ink[2] = ink[3] = 0;
@@ -1046,7 +1046,7 @@ _gaussian_blur(ImagingObject *self, PyObject *args) {
     }
 
     imIn = self->image;
-    imOut = ImagingNewDirty(imIn->mode, imIn->xsize, imIn->ysize);
+    imOut = ImagingNewDirty(imIn->format->name, imIn->xsize, imIn->ysize);
     if (!imOut) {
         return NULL;
     }
@@ -1397,7 +1397,7 @@ _point(ImagingObject *self, PyObject *args) {
         im = ImagingPoint(self->image, mode, (void *)data);
         free(data);
 
-    } else if (!strcmp(self->image->mode, "I") && mode && !strcmp(mode, "L")) {
+    } else if (!strcmp(self->image->format->name, "I") && mode && !strcmp(mode, "L")) {
         UINT8 *data;
 
         /* map from 16-bit subset of 32-bit data to 8-bit */
@@ -1649,8 +1649,8 @@ _putpalette(ImagingObject *self, PyObject *args) {
         return NULL;
     }
 
-    if (strcmp(self->image->mode, "L") && strcmp(self->image->mode, "LA") &&
-        strcmp(self->image->mode, "P") && strcmp(self->image->mode, "PA")) {
+    if (strcmp(self->image->format->name, "L") && strcmp(self->image->format->name, "LA") &&
+        strcmp(self->image->format->name, "P") && strcmp(self->image->format->name, "PA")) {
         PyErr_SetString(PyExc_ValueError, wrong_mode);
         return NULL;
     }
@@ -1670,6 +1670,7 @@ _putpalette(ImagingObject *self, PyObject *args) {
     ImagingPaletteDelete(self->image->palette);
 
     strcpy(self->image->mode, strlen(self->image->mode) == 2 ? "PA" : "P");
+    self->image->format = ImageFormatGet(self->image->mode);
 
     self->image->palette = ImagingPaletteNew(palette_mode);
 
@@ -1837,7 +1838,7 @@ _resize(ImagingObject *self, PyObject *args) {
         a[2] = box[0];
         a[5] = box[1];
 
-        imOut = ImagingNewDirty(imIn->mode, xsize, ysize);
+        imOut = ImagingNewDirty(imIn->format->name, xsize, ysize);
 
         imOut = ImagingTransform(
             imOut, imIn, IMAGING_TRANSFORM_AFFINE, 0, 0, xsize, ysize, a, filter, 1);
@@ -1919,11 +1920,12 @@ im_setmode(ImagingObject *self, PyObject *args) {
 
     /* move all logic in here to the libImaging primitive */
 
-    if (!strcmp(im->mode, mode)) {
+    if (!strcmp(im->format->name, mode)) {
         ; /* same mode; always succeeds */
-    } else if (IS_RGB(im->mode) && IS_RGB(mode)) {
+    } else if (IS_RGB(im->format->name) && IS_RGB(mode)) {
         /* color to color */
         strcpy(im->mode, mode);
+        im->format = ImageFormatGet(mode);
         im->bands = modelen;
         if (!strcmp(mode, "RGBA")) {
             (void)ImagingFillBand(im, 3, 255);
@@ -2022,13 +2024,13 @@ _transpose(ImagingObject *self, PyObject *args) {
         case 0: /* flip left right */
         case 1: /* flip top bottom */
         case 3: /* rotate 180 */
-            imOut = ImagingNewDirty(imIn->mode, imIn->xsize, imIn->ysize);
+            imOut = ImagingNewDirty(imIn->format->name, imIn->xsize, imIn->ysize);
             break;
         case 2: /* rotate 90 */
         case 4: /* rotate 270 */
         case 5: /* transpose */
         case 6: /* transverse */
-            imOut = ImagingNewDirty(imIn->mode, imIn->ysize, imIn->xsize);
+            imOut = ImagingNewDirty(imIn->format->name, imIn->ysize, imIn->xsize);
             break;
         default:
             PyErr_SetString(PyExc_ValueError, "No such transpose operation");
@@ -2077,7 +2079,7 @@ _unsharp_mask(ImagingObject *self, PyObject *args) {
     }
 
     imIn = self->image;
-    imOut = ImagingNewDirty(imIn->mode, imIn->xsize, imIn->ysize);
+    imOut = ImagingNewDirty(imIn->format->name, imIn->xsize, imIn->ysize);
     if (!imOut) {
         return NULL;
     }
@@ -2102,7 +2104,7 @@ _box_blur(ImagingObject *self, PyObject *args) {
     }
 
     imIn = self->image;
-    imOut = ImagingNewDirty(imIn->mode, imIn->xsize, imIn->ysize);
+    imOut = ImagingNewDirty(imIn->format->name, imIn->xsize, imIn->ysize);
     if (!imOut) {
         return NULL;
     }
@@ -2191,7 +2193,7 @@ _getextrema(ImagingObject *self) {
             case IMAGING_TYPE_FLOAT32:
                 return Py_BuildValue("dd", extrema.f[0], extrema.f[1]);
             case IMAGING_TYPE_SPECIAL:
-                if (strcmp(self->image->mode, "I;16") == 0) {
+                if (strcmp(self->image->format->name, "I;16") == 0) {
                     return Py_BuildValue("HH", extrema.s[0], extrema.s[1]);
                 }
         }
@@ -3547,7 +3549,7 @@ static struct PyMethodDef methods[] = {
 
 static PyObject *
 _getattr_mode(ImagingObject *self, void *closure) {
-    return PyUnicode_FromString(self->image->mode);
+    return PyUnicode_FromString(self->image->format->name);
 }
 
 static PyObject *
