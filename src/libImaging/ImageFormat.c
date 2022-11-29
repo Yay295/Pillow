@@ -132,7 +132,8 @@ const struct ImageFormat *IMAGE_FORMATS[IMAGE_FORMATS_COUNT] = {
 
 const struct ImageFormat *
 ImageFormatGet(const char * const name) {
-    for (int i = 0; i < IMAGE_FORMATS_COUNT; i++) {
+    int i;
+    for (i = 0; i < IMAGE_FORMATS_COUNT; i++) {
         if (strcmp(name, IMAGE_FORMATS[i]->name) == 0) {
             return IMAGE_FORMATS[i];
         }
