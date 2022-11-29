@@ -52,10 +52,17 @@ ImagingNewPrologueSubtype(const char *mode, int xsize, int ysize, int size) {
         return (Imaging)ImagingError_MemoryError();
     }
 
+    const struct ImageFormat *format = ImageFormatGet(mode);
+    if (format == NULL) {
+        return (Imaging)ImagingError_ValueError("unrecognized image mode");
+    }
+
     im = (Imaging)calloc(1, size);
     if (!im) {
         return (Imaging)ImagingError_MemoryError();
     }
+
+    im->format = format;
 
     /* Setup image descriptor */
     im->xsize = xsize;
