@@ -250,6 +250,8 @@ ImagingError_MemoryError(void);
 extern void *
 ImagingError_ModeError(void); /* maps to ValueError by default */
 extern void *
+ImagingError_BandDataTypeError(void); /* maps to ValueError by default */
+extern void *
 ImagingError_Mismatch(void); /* maps to ValueError by default */
 extern void *
 ImagingError_ValueError(const char *message);

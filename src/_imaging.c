@@ -284,6 +284,12 @@ ImagingError_ModeError(void) {
 }
 
 void *
+ImagingError_BandDataTypeError(void) {
+    PyErr_SetString(PyExc_ValueError, "image band has invalid data type");
+    return NULL;
+}
+
+void *
 ImagingError_ValueError(const char *message) {
     PyErr_SetString(
         PyExc_ValueError, (message) ? (char *)message : "unrecognized argument value");
