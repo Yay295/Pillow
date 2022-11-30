@@ -41,6 +41,11 @@ ImagingError_ModeError(void) {
 }
 
 void *
+ImagingError_BandDataTypeError(void) {
+    return ImagingError_ValueError("image band has invalid data type");
+}
+
+void *
 ImagingError_Mismatch(void) {
     return ImagingError_ValueError("images don't match");
 }
