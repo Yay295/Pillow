@@ -7,6 +7,9 @@
  * Copyright (c) Fredrik Lundh 1995-2003.
  */
 
+#ifndef IM_PLATFORM_H_GUARD
+#define IM_PLATFORM_H_GUARD
+
 #include "Python.h"
 
 /* Check that we have an ANSI compliant compiler */
@@ -84,3 +87,5 @@ typedef signed __int64 int64_t;
 #ifdef __GNUC__
 #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #endif
+
+#endif /* IM_PLATFORM_H_GUARD */
