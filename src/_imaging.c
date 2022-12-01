@@ -671,7 +671,8 @@ _linear_gradient(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    return PyImagingNew(ImagingFillLinearGradient(mode));
+    const struct ImageFormat *format = ImageFormatGet(mode);
+    return PyImagingNew(ImagingFillLinearGradient(format));
 }
 
 static PyObject *
@@ -682,7 +683,8 @@ _radial_gradient(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    return PyImagingNew(ImagingFillRadialGradient(mode));
+    const struct ImageFormat *format = ImageFormatGet(mode);
+    return PyImagingNew(ImagingFillRadialGradient(format));
 }
 
 static PyObject *

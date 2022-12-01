@@ -306,9 +306,9 @@ ImagingFill2(
 extern Imaging
 ImagingFillBand(Imaging im, int band, int color);
 extern Imaging
-ImagingFillLinearGradient(const char *mode);
+ImagingFillLinearGradient(const struct ImageFormat *format);
 extern Imaging
-ImagingFillRadialGradient(const char *mode);
+ImagingFillRadialGradient(const struct ImageFormat *format);
 extern Imaging
 ImagingFilter(Imaging im, int xsize, int ysize, const FLOAT32 *kernel, FLOAT32 offset);
 extern Imaging
