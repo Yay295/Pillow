@@ -5,6 +5,12 @@ Changelog (Pillow)
 9.4.0 (unreleased)
 ------------------
 
+- Added getxmp() to WebPImagePlugin #6758
+  [radarhere]
+
+- Added "exact" option when saving WebP #6747
+  [ashafaei, radarhere]
+
 - Use fractional coordinates when drawing text #6722
   [radarhere]
 
