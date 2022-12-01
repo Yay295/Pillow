@@ -140,9 +140,9 @@ class TestImageGetPixel(AccessTest):
         im = Image.new(mode, (1, 1), None)
         im.putpixel((0, 0), c)
         d = im.getpixel((0, 0))
-        assert d == c, (
-            f"put/getpixel roundtrip failed for mode {mode}, expected {c} got {d}"
-        )
+        assert (
+            d == c
+        ), f"put/getpixel roundtrip failed for mode {mode}, expected {c} got {d}"
 
         # check putpixel negative index
         im.putpixel((-1, -1), c)
