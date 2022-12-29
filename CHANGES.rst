@@ -5,6 +5,69 @@ Changelog (Pillow)
 9.4.0 (unreleased)
 ------------------
 
+- Do not attempt to read IFD1 if absent #6840
+  [radarhere]
+
+- Fixed writing int as ASCII tag #6800
+  [radarhere]
+
+- If available, use wl-paste or xclip for grabclipboard() on Linux #6783
+  [radarhere]
+
+- Added signed option when saving JPEG2000 images #6709
+  [radarhere]
+
+- Patch OpenJPEG to include ARM64 fix #6718
+  [radarhere]
+
+- Added support for I;16 modes in putdata() #6825
+  [radarhere]
+
+- Added conversion from RGBa to RGB #6708
+  [radarhere]
+
+- Added DDS support for uncompressed L and LA images #6820
+  [radarhere, REDxEYE]
+
+- Added LightSource tag values to ExifTags #6749
+  [radarhere]
+
+- Fixed PyAccess after changing ICO size #6821
+  [radarhere]
+
+- Do not use EXIF from info when saving PNG images #6819
+  [radarhere]
+
+- Fixed saving EXIF data to MPO #6817
+  [radarhere]
+
+- Added Exif hide_offsets() #6762
+  [radarhere]
+
+- Only compare to previous frame when checking for duplicate GIF frames while saving #6787
+  [radarhere]
+
+- Always initialize all plugins in registered_extensions() #6811
+  [radarhere]
+
+- Ignore non-opaque WebP background when saving as GIF #6792
+  [radarhere]
+
+- Only set tile in ImageFile __setstate__ #6793
+  [radarhere]
+
+- When reading BLP, do not trust JPEG decoder to determine image is CMYK #6767
+  [radarhere]
+
+- Added IFD enum to ExifTags #6748
+  [radarhere]
+
+- Fixed bug combining GIF frame durations #6779
+  [radarhere]
+
+- Support saving JPEG comments #6774
+  [smason, radarhere]
+
 - Added getxmp() to WebPImagePlugin #6758
   [radarhere]
 

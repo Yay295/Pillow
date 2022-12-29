@@ -152,9 +152,9 @@ deps = {
         "libs": [r"*.lib"],
     },
     "xz": {
-        "url": SF_PROJECTS + "/lzmautils/files/xz-5.2.8.tar.gz/download",
-        "filename": "xz-5.2.8.tar.gz",
-        "dir": "xz-5.2.8",
+        "url": SF_PROJECTS + "/lzmautils/files/xz-5.4.0.tar.gz/download",
+        "filename": "xz-5.4.0.tar.gz",
+        "dir": "xz-5.4.0",
         "license": "COPYING",
         "patch": {
             r"src\liblzma\api\lzma.h": {
@@ -200,15 +200,11 @@ deps = {
         "libs": [r"output\release-static\{architecture}\lib\*.lib"],
     },
     "libtiff": {
-        "url": "https://download.osgeo.org/libtiff/tiff-4.4.0.tar.gz",
-        "filename": "tiff-4.4.0.tar.gz",
-        "dir": "tiff-4.4.0",
-        "license": "COPYRIGHT",
+        "url": "https://download.osgeo.org/libtiff/tiff-4.5.0.tar.gz",
+        "filename": "tiff-4.5.0.tar.gz",
+        "dir": "tiff-4.5.0",
+        "license": "LICENSE.md",
         "patch": {
-            r"cmake\LZMACodec.cmake": {
-                # fix typo
-                "${{LZMA_FOUND}}": "${{LIBLZMA_FOUND}}",
-            },
             r"libtiff\tif_lzma.c": {
                 # link against liblzma.lib
                 "#ifdef LZMA_SUPPORT": '#ifdef LZMA_SUPPORT\n#pragma comment(lib, "liblzma.lib")',  # noqa: E501
@@ -293,7 +289,7 @@ deps = {
         # "bins": [r"objs\{msbuild_arch}\Release\freetype.dll"],
     },
     "lcms2": {
-        "url": SF_PROJECTS + "/lcms/files/lcms/2.13/lcms2-2.14.tar.gz/download",
+        "url": SF_PROJECTS + "/lcms/files/lcms/2.14/lcms2-2.14.tar.gz/download",
         "filename": "lcms2-2.14.tar.gz",
         "dir": "lcms2-2.14",
         "license": "COPYING",
@@ -323,6 +319,11 @@ deps = {
         "filename": "openjpeg-2.5.0.tar.gz",
         "dir": "openjpeg-2.5.0",
         "license": "LICENSE",
+        "patch": {
+            r"src\lib\openjp2\ht_dec.c": {
+                "#ifdef OPJ_COMPILER_MSVC\n    return (OPJ_UINT32)__popcnt(val);": "#if defined(OPJ_COMPILER_MSVC) && (defined(_M_IX86) || defined(_M_AMD64))\n    return (OPJ_UINT32)__popcnt(val);",  # noqa: E501
+            }
+        },
         "build": [
             cmd_cmake(("-DBUILD_CODEC:BOOL=OFF", "-DBUILD_SHARED_LIBS:BOOL=OFF")),
             cmd_nmake(target="clean"),
@@ -355,9 +356,9 @@ deps = {
         "libs": [r"imagequant.lib"],
     },
     "harfbuzz": {
-        "url": "https://github.com/harfbuzz/harfbuzz/archive/5.3.1.zip",
-        "filename": "harfbuzz-5.3.1.zip",
-        "dir": "harfbuzz-5.3.1",
+        "url": "https://github.com/harfbuzz/harfbuzz/archive/6.0.0.zip",
+        "filename": "harfbuzz-6.0.0.zip",
+        "dir": "harfbuzz-6.0.0",
         "license": "COPYING",
         "build": [
             cmd_set("CXXFLAGS", "-d2FH4-"),

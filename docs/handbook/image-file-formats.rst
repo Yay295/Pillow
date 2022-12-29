@@ -474,6 +474,11 @@ The :py:meth:`~PIL.Image.Image.save` method supports the following options:
 
     .. versionadded:: 2.5.0
 
+**comment**
+    A comment about the image.
+
+    .. versionadded:: 9.4.0
+
 
 .. note::
 
@@ -562,6 +567,11 @@ The :py:meth:`~PIL.Image.Image.save` method supports the following options:
     have its quality layers decoded as they arrive at the decoder, while one
     encoded using RLCP mode will have increasing resolutions decoded as they
     arrive, and so on.
+
+**signed**
+    If true, then tell the encoder to save the image as signed.
+
+    .. versionadded:: 9.4.0
 
 **cinema_mode**
     Set the encoder to produce output compliant with the digital cinema
