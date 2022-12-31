@@ -35,8 +35,6 @@ BBOX2 = (X0, Y0, X1, Y1)
 POINTS1 = ((10, 10), (20, 40), (30, 30))
 POINTS2 = (10, 10, 20, 40, 30, 30)
 
-KITE_POINTS = ((10, 50), (70, 10), (90, 50), (70, 90), (10, 50))
-
 FONT_PATH = "Tests/fonts/FreeMono.ttf"
 
 
