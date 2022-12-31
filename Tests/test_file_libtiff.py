@@ -150,12 +150,12 @@ class TestFileLibTiff(LibTiffTestCase):
 
         # PhotometricInterpretation is set from SAVE_INFO,
         # not the original image.
-        ignored = {
+        ignored = (
             "StripByteCounts",
             "RowsPerStrip",
             "PageNumber",
             "PhotometricInterpretation",
-        }
+        )
 
         with Image.open(f) as loaded:
             if legacy_api:

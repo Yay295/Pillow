@@ -30,7 +30,7 @@ def test_bad():
 def test_questionable():
     """These shouldn't crash/dos, but it's not well defined that these
     are in spec"""
-    supported = {
+    supported = (
         "pal8os2v2.bmp",
         "rgb24prof.bmp",
         "pal1p1.bmp",
@@ -42,7 +42,7 @@ def test_questionable():
         "pal8os2sp.bmp",
         "pal8rletrns.bmp",
         "rgb32bf-xbgr.bmp",
-    }
+    )
     for f in get_files("q"):
         try:
             with Image.open(f) as im:
