@@ -67,10 +67,7 @@ def test_path_constructors(coords):
 def test_path_constructor_text():
     # Arrange
     arr = array.array("f", (0, 1))
-    if hasattr(arr, "tobytes"):
-        text = arr.tobytes()
-    else:
-        text = arr.tostring()
+    text = arr.tobytes()
 
     # Act
     p = ImagePath.Path(text)
