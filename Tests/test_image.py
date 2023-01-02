@@ -512,6 +512,14 @@ class TestImage:
         i = Image.new("RGB", (1, 1))
         assert isinstance(i.size, tuple)
 
+    @pytest.mark.timeout(0.75)
+    @pytest.mark.skipif(
+        "PILLOW_VALGRIND_TEST" in os.environ, reason="Valgrind is slower"
+    )
+    @pytest.mark.parametrize("size", ((0, 100000000), (100000000, 0)))
+    def test_empty_image(self, size):
+        Image.new("RGB", size)
+
     def test_storage_neg(self):
         # Storage.c accepted negative values for xsize, ysize.  Was
         # test_neg_ppm, but the core function for that has been
@@ -921,12 +929,7 @@ class TestImage:
         with pytest.warns(DeprecationWarning):
             assert Image.CONTAINER == 2
 
-    def test_constants_deprecation(self):
-        with pytest.warns(DeprecationWarning):
-            assert Image.NEAREST == 0
-        with pytest.warns(DeprecationWarning):
-            assert Image.NONE == 0
-
+    def test_constants(self):
         with pytest.warns(DeprecationWarning):
             assert Image.LINEAR == Image.Resampling.BILINEAR
         with pytest.warns(DeprecationWarning):
@@ -943,8 +946,7 @@ class TestImage:
             Image.Quantize,
         ):
             for name in enum.__members__:
-                with pytest.warns(DeprecationWarning):
-                    assert getattr(Image, name) == enum[name]
+                assert getattr(Image, name) == enum[name]
 
     @pytest.mark.parametrize(
         "path",

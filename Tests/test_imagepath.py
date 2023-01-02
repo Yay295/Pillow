@@ -63,17 +63,12 @@ def test_path_constructors(coords):
     # Assert
     assert list(p) == [(0.0, 1.0)]
 
-
 def test_path_constructor_text():
     # Arrange
     arr = array.array("f", (0, 1))
-    if hasattr(arr, "tobytes"):
-        text = arr.tobytes()
-    else:
-        text = arr.tostring()
 
     # Act
-    p = ImagePath.Path(text)
+    p = ImagePath.Path(arr.tobytes())
 
     # Assert
     assert list(p) == [(0.0, 1.0)]
