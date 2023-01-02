@@ -2,8 +2,20 @@
 Changelog (Pillow)
 ==================
 
-9.4.0 (unreleased)
+9.4.0 (2023-01-02)
 ------------------
+
+- Fixed null pointer dereference crash with malformed font #6846
+  [wiredfool, radarhere]
+
+- Return from ImagingFill early if image has a zero dimension #6842
+  [radarhere]
+
+- Reversed deprecations for Image constants, except for duplicate Resampling attributes #6830
+  [radarhere]
+
+- Improve exception traceback readability #6836
+  [hugovk, radarhere]
 
 - Do not attempt to read IFD1 if absent #6840
   [radarhere]
