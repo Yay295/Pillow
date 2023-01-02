@@ -63,6 +63,7 @@ def test_path_constructors(coords):
     # Assert
     assert list(p) == [(0.0, 1.0)]
 
+
 def test_path_constructor_text():
     # Arrange
     arr = array.array("f", (0, 1))
