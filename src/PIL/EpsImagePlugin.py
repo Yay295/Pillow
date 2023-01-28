@@ -213,8 +213,10 @@ class EpsImageFile(ImageFile.ImageFile):
         # go to offset - start of "%!PS"
         self.fp.seek(offset)
 
+        box = None
+
         self.mode = "RGB"
-        self._size = None
+        self._size = 1, 1  # FIXME: huh?
 
         byte_arr = bytearray(255)
         bytes_mv = memoryview(byte_arr)
@@ -333,8 +335,7 @@ class EpsImageFile(ImageFile.ImageFile):
 
         check_required_header_comments()
 
-        if not self._size:
-            self._size = 1, 1  # errors if this isn't set. why (1,1)?
+        if not box:
             msg = "cannot determine EPS bounding box"
             raise OSError(msg)
 
