@@ -482,13 +482,24 @@ class Image:
         # FIXME: take "new" parameters / other image?
         # FIXME: turn mode and size into delegating properties?
         self.im = None
-        self.mode = ""
+        self._mode = ""
         self._size = (0, 0)
         self.palette = None
         self.info = {}
         self.readonly = 0
         self.pyaccess = None
         self._exif = None
+
+    @property
+    def mode(self):
+        return self.im.mode if self.im else self._mode
+
+    @mode.setter
+    def mode(self, value):
+        if self.im:
+            self.im.mode = value
+        else:
+            self._mode = value
 
     @property
     def width(self):
@@ -512,7 +523,6 @@ class Image:
     def _new(self, im):
         new = Image()
         new.im = im
-        new.mode = im.mode
         if im.mode in ("P", "PA"):
             if self.palette:
                 new.palette = self.palette.copy()
@@ -699,7 +709,6 @@ class Image:
         Image.__init__(self)
         info, mode, size, palette, data = state
         self.info = info
-        self.mode = mode
         self.im = core.new(mode, size)
         if mode in ("L", "LA", "P", "PA") and palette:
             self.putpalette(palette)
@@ -2604,7 +2613,6 @@ class Image:
         if self.size != size:
             im = self.resize(size, resample, box=box, reducing_gap=reducing_gap)
             self.im = im.im
-            self.mode = self.im.mode
 
         self.readonly = 0
         self.pyaccess = None
