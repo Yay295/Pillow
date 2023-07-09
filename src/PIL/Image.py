@@ -500,13 +500,19 @@ class Image:
 
     @property
     def size(self):
-        return self._size
+        return self.im.size if self.im else self._size
+
+    @size.setter
+    def size(self, value):
+        if self.im:
+            self.im.size = value
+        else:
+            self._size = value
 
     def _new(self, im):
         new = Image()
         new.im = im
         new.mode = im.mode
-        new._size = im.size
         if im.mode in ("P", "PA"):
             if self.palette:
                 new.palette = self.palette.copy()
@@ -694,7 +700,6 @@ class Image:
         info, mode, size, palette, data = state
         self.info = info
         self.mode = mode
-        self._size = size
         self.im = core.new(mode, size)
         if mode in ("L", "LA", "P", "PA") and palette:
             self.putpalette(palette)
@@ -2598,9 +2603,7 @@ class Image:
 
         if self.size != size:
             im = self.resize(size, resample, box=box, reducing_gap=reducing_gap)
-
             self.im = im.im
-            self._size = size
             self.mode = self.im.mode
 
         self.readonly = 0
