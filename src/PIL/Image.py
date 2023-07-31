@@ -519,6 +519,10 @@ class Image:
         else:
             self._size = value
 
+    @property
+    def mode(self):
+        return self._mode
+
     def _new(self, im):
         new = Image()
         new.im = im
@@ -656,9 +660,8 @@ class Image:
         b = io.BytesIO()
         try:
             self.save(b, image_format, **kwargs)
-        except Exception as e:
-            msg = f"Could not save to {image_format} for display"
-            raise ValueError(msg) from e
+        except Exception:
+            return None
         return b.getvalue()
 
     def _repr_png_(self):
@@ -1853,7 +1856,7 @@ class Image:
                         raise ValueError from e  # sanity check
                     self.im = im
                 self.pyaccess = None
-                self.mode = self.im.mode
+                self._mode = self.im.mode
             except KeyError as e:
                 msg = "illegal image mode"
                 raise ValueError(msg) from e
@@ -1931,7 +1934,7 @@ class Image:
             if not isinstance(data, bytes):
                 data = bytes(data)
             palette = ImagePalette.raw(rawmode, data)
-        self.mode = "PA" if "A" in self.mode else "P"
+        self._mode = "PA" if "A" in self.mode else "P"
         self.palette = palette
         self.palette.mode = "RGB"
         self.load()  # install new palette
@@ -2039,7 +2042,7 @@ class Image:
         mapping_palette = bytearray(new_positions)
 
         m_im = self.copy()
-        m_im.mode = "P"
+        m_im._mode = "P"
 
         m_im.palette = ImagePalette.ImagePalette(
             palette_mode, palette=mapping_palette * bands
