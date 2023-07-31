@@ -493,13 +493,6 @@ class Image:
     def mode(self):
         return self.im.mode if self.im else self._mode
 
-    @mode.setter
-    def mode(self, value):
-        if self.im:
-            self.im.mode = value
-        else:
-            self._mode = value
-
     @property
     def width(self):
         return self.size[0]
@@ -511,13 +504,6 @@ class Image:
     @property
     def size(self):
         return self.im.size if self.im else self._size
-
-    @size.setter
-    def size(self, value):
-        if self.im:
-            self.im.size = value
-        else:
-            self._size = value
 
     @property
     def mode(self):
