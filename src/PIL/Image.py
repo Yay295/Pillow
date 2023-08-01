@@ -505,10 +505,6 @@ class Image:
     def size(self):
         return self.im.size if self.im else self._size
 
-    @property
-    def mode(self):
-        return self._mode
-
     def _new(self, im):
         new = Image()
         new.im = im
