@@ -139,6 +139,18 @@ class ImageFile(Image.Image):
         if self.format is not None:
             return Image.MIME.get(self.format.upper())
 
+    @property
+    def size(self):
+        if not self.tile and self.im:
+            return self.im.size
+        return self._size
+
+    @property
+    def mode(self):
+        if not self.tile and self.im:
+            return self.im.mode
+        return self._mode
+
     def __setstate__(self, state):
         self.tile = []
         super().__setstate__(state)
