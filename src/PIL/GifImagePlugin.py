@@ -437,7 +437,7 @@ class GifImageFile(ImageFile.ImageFile):
                     self._mode = "RGBA"
                 else:
                     self._mode = "RGB"
-                self.im = self.im.convert(self.mode, Image.Dither.FLOYDSTEINBERG)
+                self.im = self.im.convert(self._mode, Image.Dither.FLOYDSTEINBERG)
             return
         if not self._prev_im:
             return

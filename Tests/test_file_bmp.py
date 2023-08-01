@@ -73,6 +73,7 @@ def test_small_palette(tmp_path):
 def test_save_too_large(tmp_path):
     outfile = str(tmp_path / "temp.bmp")
     with Image.new("RGB", (1, 1)) as im:
+        im.im = None
         im._size = (37838, 37838)
         with pytest.raises(ValueError):
             im.save(outfile)

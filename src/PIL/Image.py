@@ -507,6 +507,8 @@ class Image:
 
     def _new(self, im):
         new = Image()
+        new._mode = im.mode
+        new._size = im.size
         new.im = im
         if im.mode in ("P", "PA"):
             if self.palette:
@@ -693,6 +695,7 @@ class Image:
         Image.__init__(self)
         info, mode, size, palette, data = state
         self.info = info
+        self._mode = mode
         self.im = core.new(mode, size)
         if mode in ("L", "LA", "P", "PA") and palette:
             self.putpalette(palette)
