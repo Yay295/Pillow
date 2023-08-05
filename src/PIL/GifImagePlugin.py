@@ -204,6 +204,7 @@ class GifImageFile(ImageFile.ImageFile):
         info: dict[str, Any] = {}
         frame_transparency = None
         interlace = None
+        new_size = self.size
         frame_dispose_extent = None
         while True:
             if not s:
@@ -274,9 +275,9 @@ class GifImageFile(ImageFile.ImageFile):
                 # extent
                 x0, y0 = i16(s, 0), i16(s, 2)
                 x1, y1 = x0 + i16(s, 4), y0 + i16(s, 6)
-                if (x1 > self.size[0] or y1 > self.size[1]) and update_image:
-                    self._size = max(x1, self.size[0]), max(y1, self.size[1])
-                    Image._decompression_bomb_check(self._size)
+                if (x1 > new_size[0] or y1 > new_size[1]) and update_image:
+                    new_size = max(x1, new_size[0]), max(y1, new_size[1])
+                    Image._decompression_bomb_check(new_size)
                 frame_dispose_extent = x0, y0, x1, y1
                 flags = s[8]
 
@@ -334,11 +335,12 @@ class GifImageFile(ImageFile.ImageFile):
                     if "transparency" in self.info:
                         self.im.putpalettealpha(self.info["transparency"], 0)
                         self.im = self.im.convert("RGBA", Image.Dither.FLOYDSTEINBERG)
-                        self._mode = "RGBA"
                         del self.info["transparency"]
                     else:
-                        self._mode = "RGB"
                         self.im = self.im.convert("RGB", Image.Dither.FLOYDSTEINBERG)
+                    self._mode = self.mode
+
+        self._size = new_size
 
         def _rgb(color: int) -> tuple[int, int, int]:
             if self._frame_palette:
@@ -445,10 +447,10 @@ class GifImageFile(ImageFile.ImageFile):
             if self.mode == "P" and LOADING_STRATEGY == LoadingStrategy.RGB_ALWAYS:
                 if self._frame_transparency is not None:
                     self.im.putpalettealpha(self._frame_transparency, 0)
-                    self._mode = "RGBA"
+                    self.im = self.im.convert("RGBA", Image.Dither.FLOYDSTEINBERG)
                 else:
-                    self._mode = "RGB"
-                self.im = self.im.convert(self.mode, Image.Dither.FLOYDSTEINBERG)
+                    self.im = self.im.convert("RGB", Image.Dither.FLOYDSTEINBERG)
+                self._mode = self.im.mode
             return
         if not self._prev_im:
             return
