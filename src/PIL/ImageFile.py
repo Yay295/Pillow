@@ -161,6 +161,13 @@ class ImageFile(Image.Image):
             return Image.MIME.get(self.format.upper())
         return None
 
+    def _use_im_values(self) -> bool:
+        """
+        If a different tile has been selected but not loaded,
+        self.im may not have the correct values.
+        """
+        return not self.tile and self.im is not None
+
     def __setstate__(self, state):
         self.tile = []
         super().__setstate__(state)

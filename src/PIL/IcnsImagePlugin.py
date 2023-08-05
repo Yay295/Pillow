@@ -258,18 +258,15 @@ class IcnsImageFile(ImageFile.ImageFile):
         self._mode = "RGBA"
         self.info["sizes"] = self.icns.itersizes()
         self.best_size = self.icns.bestsize()
-        self.size = (
+        self._size = (
             self.best_size[0] * self.best_size[2],
             self.best_size[1] * self.best_size[2],
         )
 
-    @property
-    def size(self):
-        return self._size
-
-    @size.setter
-    def size(self, value):
-        info_size = value
+    # https://github.com/python/mypy/issues/1465
+    @Image.Image.size.setter  # type: ignore[attr-defined]
+    def size(self, value: tuple[int, int]) -> None:
+        info_size: tuple[int, ...] = value
         if info_size not in self.info["sizes"] and len(info_size) == 2:
             info_size = (info_size[0], info_size[1], 1)
         if (
@@ -285,7 +282,10 @@ class IcnsImageFile(ImageFile.ImageFile):
         if info_size not in self.info["sizes"]:
             msg = "This is not one of the allowed sizes of this image"
             raise ValueError(msg)
-        self._size = value
+        if value != self.size:
+            self.im = None
+            self.pyaccess = None
+            self._size = value
 
     def load(self):
         if len(self.size) == 3:
@@ -308,7 +308,7 @@ class IcnsImageFile(ImageFile.ImageFile):
 
         self.im = im.im
         self._mode = im.mode
-        self.size = im.size
+        self._size = im.size
 
         return px
 
@@ -391,7 +391,7 @@ if __name__ == "__main__":
     with open(sys.argv[1], "rb") as fp:
         imf = IcnsImageFile(fp)
         for size in imf.info["sizes"]:
-            width, height, scale = imf.size = size
+            width, height, scale = imf._size = size
             imf.save(f"out-{width}-{height}-{scale}.png")
         with Image.open(sys.argv[1]) as im:
             im.save("out.png")
