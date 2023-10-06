@@ -4,7 +4,7 @@ import pytest
 
 from PIL import Image
 
-mode_names_not_bgr = (
+mode_names = (
     "1",
     "L",
     "LA",
@@ -21,11 +21,9 @@ mode_names_not_bgr = (
     "RGBA",
     "RGBa",
     "RGBX",
-    # Image.frombytes() doesn't work with BGR modes:
-    # unknown raw mode for given image mode
-    # "BGR;15",
-    # "BGR;16",
-    # "BGR;24",
+    "BGR;15",
+    "BGR;16",
+    "BGR;24",
     "CMYK",
     "YCbCr",
     "HSV",
@@ -62,7 +60,7 @@ def test_setmode():
         im.im.setmode("RGBABCDE")
 
 
-@pytest.mark.parametrize("mode", mode_names_not_bgr)
+@pytest.mark.parametrize("mode", mode_names)
 def test_equal(mode):
     num_img_bytes = len(Image.new(mode, (2, 2)).tobytes())
     # alternatively, random.randbytes() in Python 3.9
@@ -87,7 +85,7 @@ def test_not_equal_mode_1():
     assert img_a.im != img_b.im
 
 
-@pytest.mark.parametrize("mode", [mode for mode in mode_names_not_bgr if mode != "1"])
+@pytest.mark.parametrize("mode", [mode for mode in mode_names if mode != "1"])
 def test_not_equal(mode):
     num_img_bytes = len(Image.new(mode, (2, 2)).tobytes())
     # alternatively, random.randbytes() in Python 3.9
