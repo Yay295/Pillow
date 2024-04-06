@@ -12,7 +12,7 @@ import sys
 import sysconfig
 import tempfile
 from io import BytesIO
-from typing import Any, Callable, NamedTuple, Sequence
+from typing import Any, Callable, Sequence
 
 import pytest
 from packaging.version import parse as parse_version
