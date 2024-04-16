@@ -362,9 +362,9 @@ class TestLibUnpack:
         )
 
     def test_BGR(self) -> None:
-        self.assert_unpack("BGR;15", "BGR;15", 3, (8, 131, 0), (24, 0, 8), (41, 131, 8))
+        self.assert_unpack("BGR;15", "BGR;15", 2, (0, 131, 8), (8, 0, 24), (8, 131, 41))
         self.assert_unpack(
-            "BGR;16", "BGR;16", 3, (8, 64, 0), (24, 129, 0), (41, 194, 0)
+            "BGR;16", "BGR;16", 2, (0, 64, 8), (0, 129, 24), (0, 194, 41)
         )
         self.assert_unpack("BGR;24", "BGR;24", 3, (1, 2, 3), (4, 5, 6), (7, 8, 9))
 
