@@ -609,7 +609,7 @@ getink(PyObject *color, Imaging im, char *ink) {
                                ((((UINT16)g) << 2) & 0x03e0) +
                                ((((UINT16)b) >> 3) & 0x001f);
 
-                    ink[0] = (UINT8)v;
+                    ink[0] = 0x80 | (UINT8)v;
                     ink[1] = (UINT8)(v >> 8);
                     ink[2] = ink[3] = 0;
                     return ink;
