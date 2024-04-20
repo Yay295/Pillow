@@ -11,6 +11,7 @@
  */
 
 #include "ImPlatform.h"
+#include "Mode.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -68,9 +69,6 @@ typedef struct ImagingPaletteInstance *ImagingPalette;
 #define IMAGING_TYPE_INT32 1
 #define IMAGING_TYPE_FLOAT32 2
 #define IMAGING_TYPE_SPECIAL 3 /* check mode for details */
-
-#define IMAGING_MODE_LENGTH \
-    6 + 1 /* Band names ("1", "L", "P", "RGB", "RGBA", "CMYK", "YCbCr", "BGR;xy") */
 
 typedef struct {
     char *ptr;
