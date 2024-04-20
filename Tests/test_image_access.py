@@ -168,7 +168,7 @@ class TestImageGetPixel(AccessTest):
             f"expected {expected_color} got {actual_color}"
         )
 
-        # check 0x0 image with None initial color
+        # check 0x0 image
         im = Image.new(mode, (0, 0), None)
         assert im.load() is not None
         error = ValueError if self._need_cffi_access else IndexError
@@ -176,6 +176,7 @@ class TestImageGetPixel(AccessTest):
             im.putpixel((0, 0), expected_color)
         with pytest.raises(error):
             im.getpixel((0, 0))
+
         # check negative index
         with pytest.raises(error):
             im.putpixel((-1, -1), expected_color)
