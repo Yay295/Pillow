@@ -160,6 +160,19 @@ typedef struct ImagingMemoryArena {
     int stats_freed_blocks;       /* Number of freed blocks */
 } *ImagingMemoryArena;
 
+/* Memory Management */
+/* ----------------- */
+
+extern void
+ImagingAccessInit(void);
+extern void
+ImagingAccessFree(void);
+
+extern void
+ImagingConvertInit(void);
+extern void
+ImagingConvertFree(void);
+
 /* Objects */
 /* ------- */
 
@@ -192,8 +205,6 @@ ImagingCopyPalette(Imaging destination, Imaging source);
 extern void
 ImagingHistogramDelete(ImagingHistogram histogram);
 
-extern void
-ImagingAccessInit(void);
 extern ImagingAccess
 ImagingAccessNew(Imaging im);
 extern void
