@@ -57,7 +57,6 @@ extern const RawMode * const IMAGING_RAWMODE_RGB;
 extern const RawMode * const IMAGING_RAWMODE_RGBA;
 extern const RawMode * const IMAGING_RAWMODE_RGBX;
 extern const RawMode * const IMAGING_RAWMODE_RGBa;
-extern const RawMode * const IMAGING_RAWMODE_RGBa;
 extern const RawMode * const IMAGING_RAWMODE_YCbCr;
 
 // BGR modes.
