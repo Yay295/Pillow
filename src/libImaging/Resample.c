@@ -562,7 +562,7 @@ ImagingResample(Imaging imIn, int xsize, int ysize, int filter, float box[4]) {
     ResampleFunction ResampleHorizontal;
     ResampleFunction ResampleVertical;
 
-    if (strcmp(imIn->mode, "P") == 0 || strcmp(imIn->mode, "1") == 0) {
+    if (imIn->mode == IMAGING_MODE_P || imIn->mode == IMAGING_MODE_1) {
         return (Imaging)ImagingError_ModeError();
     }
 
