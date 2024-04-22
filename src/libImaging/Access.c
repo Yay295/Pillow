@@ -228,4 +228,4 @@ void
 _ImagingAccessDelete(Imaging im, ImagingAccess access) {}
 
 void
-ImagingAccessFree() {}
+ImagingAccessFree(void) {}
