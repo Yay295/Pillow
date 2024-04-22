@@ -171,7 +171,7 @@ set_access_table_item(
 }
 
 void
-ImagingAccessInit() {
+ImagingAccessInit(void) {
     int i = 0;
     set_access_table_item(i++, IMAGING_MODE_1, get_pixel_8, put_pixel_8);
     set_access_table_item(i++, IMAGING_MODE_L, get_pixel_8, put_pixel_8);
@@ -228,4 +228,4 @@ void
 _ImagingAccessDelete(Imaging im, ImagingAccess access) {}
 
 void
-ImagingAccessFree() {}
+ImagingAccessFree(void) {}
