@@ -108,7 +108,7 @@ typedef struct {
     PyObject_HEAD WebPAnimDecoder *dec;
     WebPAnimInfo info;
     WebPData data;
-    char *mode;
+    ModeID mode;
 } WebPAnimDecoderObject;
 
 static PyTypeObject WebPAnimDecoder_Type;
@@ -192,7 +192,7 @@ _anim_encoder_add(PyObject *self, PyObject *args) {
     int timestamp;
     int width;
     int height;
-    char *mode;
+    char *mode_name;
     int lossless;
     float quality_factor;
     float alpha_quality_factor;
@@ -210,7 +210,7 @@ _anim_encoder_add(PyObject *self, PyObject *args) {
             &timestamp,
             &width,
             &height,
-            &mode,
+            &mode_name,
             &lossless,
             &quality_factor,
             &alpha_quality_factor,
@@ -223,6 +223,8 @@ _anim_encoder_add(PyObject *self, PyObject *args) {
         WebPAnimEncoderAdd(enc, NULL, timestamp, NULL);
         Py_RETURN_NONE;
     }
+
+    const ModeID mode = findModeID(mode_name);
 
     // Setup config for this frame
     if (!WebPConfigInit(&config)) {
@@ -244,9 +246,9 @@ _anim_encoder_add(PyObject *self, PyObject *args) {
     frame->width = width;
     frame->height = height;
     frame->use_argb = 1;  // Don't convert RGB pixels to YUV
-    if (strcmp(mode, "RGBA") == 0) {
+    if (mode == IMAGING_MODE_RGBA) {
         WebPPictureImportRGBA(frame, rgb, 4 * width);
-    } else if (strcmp(mode, "RGBX") == 0) {
+    } else if (mode == IMAGING_MODE_RGBX) {
         WebPPictureImportRGBX(frame, rgb, 4 * width);
     } else {
         WebPPictureImportRGB(frame, rgb, 3 * width);
@@ -362,7 +364,7 @@ _anim_decoder_new(PyObject *self, PyObject *args) {
     const uint8_t *webp;
     Py_ssize_t size;
     WebPData webp_src;
-    char *mode;
+    ModeID mode;
     WebPDecoderConfig config;
     WebPAnimDecoderObject *decp = NULL;
     WebPAnimDecoder *dec = NULL;
@@ -375,10 +377,10 @@ _anim_decoder_new(PyObject *self, PyObject *args) {
     webp_src.size = size;
 
     // Sniff the mode, since the decoder API doesn't tell us
-    mode = "RGBA";
+    mode = IMAGING_MODE_RGBA;
     if (WebPGetFeatures(webp, size, &config.input) == VP8_STATUS_OK) {
         if (!config.input.has_alpha) {
-            mode = "RGBX";
+            mode = IMAGING_MODE_RGBX;
         }
     }
 
@@ -421,7 +423,8 @@ _anim_decoder_get_info(PyObject *self) {
         info->loop_count,
         info->bgcolor,
         info->frame_count,
-        decp->mode);
+        getModeData(decp->mode)->name
+    );
 }
 
 PyObject *
@@ -589,13 +592,12 @@ WebPEncode_wrapper(PyObject *self, PyObject *args) {
     uint8_t *exif_bytes;
     uint8_t *xmp_bytes;
     uint8_t *output;
-    char *mode;
+    char *mode_name;
     Py_ssize_t size;
     Py_ssize_t icc_size;
     Py_ssize_t exif_size;
     Py_ssize_t xmp_size;
     size_t ret_size;
-    int rgba_mode;
     int channels;
     int ok;
     ImagingSectionCookie cookie;
@@ -613,7 +615,7 @@ WebPEncode_wrapper(PyObject *self, PyObject *args) {
             &lossless,
             &quality_factor,
             &alpha_quality_factor,
-            &mode,
+            &mode_name,
             &icc_bytes,
             &icc_size,
             &method,
@@ -625,12 +627,12 @@ WebPEncode_wrapper(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    rgba_mode = strcmp(mode, "RGBA") == 0;
-    if (!rgba_mode && strcmp(mode, "RGB") != 0) {
+    const ModeID mode = findModeID(mode_name);
+    if (mode != IMAGING_MODE_RGB && mode != IMAGING_MODE_RGBA) {
         Py_RETURN_NONE;
     }
 
-    channels = rgba_mode ? 4 : 3;
+    channels = mode == IMAGING_MODE_RGBA ? 4 : 3;
     if (size < width * height * channels) {
         Py_RETURN_NONE;
     }
@@ -663,7 +665,7 @@ WebPEncode_wrapper(PyObject *self, PyObject *args) {
     pic.height = height;
     pic.use_argb = 1;  // Don't convert RGB pixels to YUV
 
-    if (rgba_mode) {
+    if (mode == IMAGING_MODE_RGBA) {
         WebPPictureImportRGBA(&pic, rgb, channels * width);
     } else {
         WebPPictureImportRGB(&pic, rgb, channels * width);
@@ -776,11 +778,10 @@ WebPDecode_wrapper(PyObject *self, PyObject *args) {
     PyBytesObject *webp_string;
     const uint8_t *webp;
     Py_ssize_t size;
-    PyObject *ret = Py_None, *bytes = NULL, *pymode = NULL, *icc_profile = NULL,
-             *exif = NULL;
+    PyObject *ret = Py_None, *bytes = NULL, *icc_profile = NULL, *exif = NULL;
     WebPDecoderConfig config;
     VP8StatusCode vp8_status_code = VP8_STATUS_OK;
-    char *mode = "RGB";
+    ModeID mode = IMAGING_MODE_RGB;
 
     if (!PyArg_ParseTuple(args, "S", &webp_string)) {
         return NULL;
@@ -798,7 +799,7 @@ WebPDecode_wrapper(PyObject *self, PyObject *args) {
         // Initialized to MODE_RGB
         if (config.input.has_alpha) {
             config.output.colorspace = MODE_RGBA;
-            mode = "RGBA";
+            mode = IMAGING_MODE_RGBA;
         }
 
 #ifndef HAVE_WEBPMUX
@@ -856,13 +857,12 @@ WebPDecode_wrapper(PyObject *self, PyObject *args) {
             (char *)config.output.u.YUVA.y, config.output.u.YUVA.y_size);
     }
 
-    pymode = PyUnicode_FromString(mode);
     ret = Py_BuildValue(
-        "SiiSSS",
+        "SiisSS",
         bytes,
         config.output.width,
         config.output.height,
-        pymode,
+        getModeData(mode)->name,
         NULL == icc_profile ? Py_None : icc_profile,
         NULL == exif ? Py_None : exif);
 
@@ -870,7 +870,6 @@ end:
     WebPFreeDecBuffer(&config.output);
 
     Py_XDECREF(bytes);
-    Py_XDECREF(pymode);
     Py_XDECREF(icc_profile);
     Py_XDECREF(exif);
 
