@@ -357,14 +357,14 @@ static PyTypeObject ImagingEncoderType = {
 /* -------------------------------------------------------------------- */
 
 int
-get_packer(ImagingEncoderObject *encoder, const Mode *mode, const RawMode *rawmode) {
+get_packer(ImagingEncoderObject *encoder, const ModeID mode, const RawModeID rawmode) {
     int bits;
     ImagingShuffler pack;
 
     pack = ImagingFindPacker(mode, rawmode, &bits);
     if (!pack) {
         Py_DECREF(encoder);
-        PyErr_Format(PyExc_ValueError, "No packer found from %s to %s", mode->name, rawmode->name);
+        PyErr_Format(PyExc_ValueError, "No packer found from %s to %s", getModeData(mode)->name, getRawModeData(rawmode)->name);
         return -1;
     }
 
@@ -413,8 +413,8 @@ PyImaging_GifEncoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     if (get_packer(encoder, mode, rawmode) < 0) {
         return NULL;
@@ -449,8 +449,8 @@ PyImaging_PcxEncoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     if (get_packer(encoder, mode, rawmode) < 0) {
         return NULL;
@@ -483,8 +483,8 @@ PyImaging_RawEncoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     if (get_packer(encoder, mode, rawmode) < 0) {
         return NULL;
@@ -519,8 +519,8 @@ PyImaging_TgaRleEncoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     if (get_packer(encoder, mode, rawmode) < 0) {
         return NULL;
@@ -606,8 +606,8 @@ PyImaging_ZipEncoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     if (get_packer(encoder, mode, rawmode) < 0) {
         free(dictionary);
@@ -706,8 +706,8 @@ PyImaging_LibTiffEncoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     if (get_packer(encoder, mode, rawmode) < 0) {
         return NULL;
@@ -1107,8 +1107,8 @@ PyImaging_JpegEncoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    RawModeID  rawmode = findRawModeID(rawmode_name);
 
     // libjpeg-turbo supports different output formats.
     // We are choosing Pillow's native format (3 color bytes + 1 padding)

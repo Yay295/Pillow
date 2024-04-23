@@ -292,7 +292,7 @@ static PyTypeObject ImagingDecoderType = {
 /* -------------------------------------------------------------------- */
 
 int
-get_unpacker(ImagingDecoderObject *decoder, const Mode *mode, const RawMode *rawmode) {
+get_unpacker(ImagingDecoderObject *decoder, const ModeID mode, const RawModeID rawmode) {
     int bits;
     ImagingShuffler unpack;
 
@@ -467,8 +467,8 @@ PyImaging_HexDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     decoder = PyImaging_DecoderNew(0);
     if (decoder == NULL) {
@@ -507,8 +507,8 @@ PyImaging_LibTiffDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     TRACE(("new tiff decoder %s\n", compname));
 
@@ -548,8 +548,8 @@ PyImaging_PackbitsDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     decoder = PyImaging_DecoderNew(0);
     if (decoder == NULL) {
@@ -602,8 +602,8 @@ PyImaging_PcxDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     decoder = PyImaging_DecoderNew(0);
     if (decoder == NULL) {
@@ -636,8 +636,8 @@ PyImaging_RawDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     decoder = PyImaging_DecoderNew(sizeof(RAWSTATE));
     if (decoder == NULL) {
@@ -672,8 +672,8 @@ PyImaging_SgiRleDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     decoder = PyImaging_DecoderNew(sizeof(SGISTATE));
     if (decoder == NULL) {
@@ -706,8 +706,8 @@ PyImaging_SunRleDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     decoder = PyImaging_DecoderNew(0);
     if (decoder == NULL) {
@@ -738,8 +738,8 @@ PyImaging_TgaRleDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     decoder = PyImaging_DecoderNew(0);
     if (decoder == NULL) {
@@ -798,8 +798,8 @@ PyImaging_ZipDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     decoder = PyImaging_DecoderNew(sizeof(ZIPSTATE));
     if (decoder == NULL) {
@@ -854,9 +854,9 @@ PyImaging_JpegDecoderNew(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * rawmode = findRawMode(rawmode_name);
-    const RawMode * const jpegmode = findRawMode(jpegmode_name);
+    const ModeID mode = findModeID(mode_name);
+    RawModeID rawmode = findRawModeID(rawmode_name);
+    const RawModeID jpegmode = findRawModeID(jpegmode_name);
 
     decoder = PyImaging_DecoderNew(sizeof(JPEGSTATE));
     if (decoder == NULL) {

@@ -304,7 +304,7 @@ ImagingError_Clear(void) {
 /* -------------------------------------------------------------------- */
 
 static int
-getbands(const Mode *mode) {
+getbands(const ModeID mode) {
     Imaging im;
     int bands;
 
@@ -663,7 +663,7 @@ _fill(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     im = ImagingNewDirty(mode, xsize, ysize);
     if (!im) {
@@ -692,7 +692,7 @@ _new(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     return PyImagingNew(ImagingNew(mode, xsize, ysize));
 }
@@ -706,7 +706,7 @@ _new_block(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     return PyImagingNew(ImagingNewBlock(mode, xsize, ysize));
 }
@@ -719,7 +719,7 @@ _linear_gradient(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     return PyImagingNew(ImagingFillLinearGradient(mode));
 }
@@ -732,7 +732,7 @@ _radial_gradient(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     return PyImagingNew(ImagingFillRadialGradient(mode));
 }
@@ -892,7 +892,7 @@ _color_lut_3d(ImagingObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     /* actually, it is trilinear */
     if (filter != IMAGING_TRANSFORM_BILINEAR) {
@@ -964,7 +964,7 @@ _convert(ImagingObject *self, PyObject *args) {
         }
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     return PyImagingNew(ImagingConvert(
         self->image, mode, paletteimage ? paletteimage->image->palette : NULL, dither));
@@ -1013,7 +1013,7 @@ _convert_matrix(ImagingObject *self, PyObject *args) {
         }
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     return PyImagingNew(ImagingConvertMatrix(self->image, mode, m));
 }
@@ -1023,12 +1023,12 @@ _convert_transparent(ImagingObject *self, PyObject *args) {
     char *mode_name;
     int r, g, b;
     if (PyArg_ParseTuple(args, "s(iii)", &mode_name, &r, &g, &b)) {
-        const Mode * const mode = findMode(mode_name);
+        const ModeID mode = findModeID(mode_name);
         return PyImagingNew(ImagingConvertTransparent(self->image, mode, r, g, b));
     }
     PyErr_Clear();
     if (PyArg_ParseTuple(args, "si", &mode_name, &r)) {
-        const Mode * const mode = findMode(mode_name);
+        const ModeID mode = findModeID(mode_name);
         return PyImagingNew(ImagingConvertTransparent(self->image, mode, r, 0, 0));
     }
     return NULL;
@@ -1143,8 +1143,8 @@ _getpalette(ImagingObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
-    const RawMode * const rawmode = findRawMode(rawmode_name);
+    const ModeID mode = findModeID(mode_name);
+    const RawModeID rawmode = findRawModeID(rawmode_name);
 
     pack = ImagingFindPacker(mode, rawmode, &bits);
     if (!pack) {
@@ -1171,7 +1171,7 @@ _getpalettemode(ImagingObject *self) {
         return NULL;
     }
 
-    return PyUnicode_FromString(self->image->palette->mode->name);
+    return PyUnicode_FromString(getModeData(self->image->palette->mode)->name);
 }
 
 static inline int
@@ -1457,7 +1457,7 @@ _point(ImagingObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     if (mode == IMAGING_MODE_F) {
         FLOAT32 *data;
@@ -1760,14 +1760,14 @@ _putpalette(ImagingObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const palette_mode = findMode(palette_mode_name);
-    if (palette_mode == NULL) {
+    const ModeID palette_mode = findModeID(palette_mode_name);
+    if (palette_mode == IMAGING_MODE_UNKNOWN) {
         PyErr_SetString(PyExc_ValueError, wrong_mode);
         return NULL;
     }
 
-    const RawMode * const rawmode = findRawMode(rawmode_name);
-    if (rawmode == NULL) {
+    const RawModeID rawmode = findRawModeID(rawmode_name);
+    if (rawmode == IMAGING_RAWMODE_UNKNOWN) {
         PyErr_SetString(PyExc_ValueError, wrong_raw_mode);
         return NULL;
     }
@@ -2023,7 +2023,7 @@ _reduce(ImagingObject *self, PyObject *args) {
 }
 
 static int
-isRGB(const Mode * const mode) {
+isRGB(const ModeID mode) {
     return mode == IMAGING_MODE_RGB || mode == IMAGING_MODE_RGBA || mode == IMAGING_MODE_RGBX;
 }
 
@@ -2039,7 +2039,7 @@ im_setmode(ImagingObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     im = self->image;
 
@@ -2439,7 +2439,7 @@ _merge(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    const Mode * const mode = findMode(mode_name);
+    const ModeID mode = findModeID(mode_name);
 
     if (band0) {
         bands[0] = band0->image;
@@ -3760,7 +3760,7 @@ static struct PyMethodDef methods[] = {
 
 static PyObject *
 _getattr_mode(ImagingObject *self, void *closure) {
-    return PyUnicode_FromString(self->image->mode->name);
+    return PyUnicode_FromString(getModeData(self->image->mode)->name);
 }
 
 static PyObject *
@@ -4370,11 +4370,6 @@ setup_module(PyObject *m) {
         return -1;
     }
 
-    ImagingAccessInit();
-    ImagingConvertInit();
-    ImagingPackInit();
-    ImagingUnpackInit();
-
 #ifdef HAVE_LIBJPEG
     {
         extern const char *ImagingJpegVersion(void);
@@ -4477,14 +4472,6 @@ setup_module(PyObject *m) {
     return 0;
 }
 
-static void
-free_module(void *m) {
-    ImagingAccessFree();
-    ImagingConvertFree();
-    ImagingPackFree();
-    ImagingUnpackFree();
-}
-
 PyMODINIT_FUNC
 PyInit__imaging(void) {
     PyObject *m;
@@ -4495,10 +4482,6 @@ PyInit__imaging(void) {
         NULL,       /* m_doc */
         -1,         /* m_size */
         functions,  /* m_methods */
-        NULL,       /* m_slots */
-        NULL,       /* m_traverse */
-        NULL,       /* m_clear */
-        free_module /* m_free */
     };
 
     m = PyModule_Create(&module_def);
