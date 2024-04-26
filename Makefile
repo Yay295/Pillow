@@ -68,7 +68,7 @@ debug:
 # for our stuff, kills optimization, and redirects to dev null so we
 # see any build failures.
 	make clean > /dev/null
-	CFLAGS='-g -O0' python3 -m pip -v install . > /dev/null
+	CFLAGS='-g -O2 -std=c99 -Wall -Wlogical-op' python3 -m pip -v install . > /dev/null
 
 .PHONY: release-test
 release-test:
