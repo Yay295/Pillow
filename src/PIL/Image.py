@@ -561,37 +561,35 @@ class Image:
 
     @property
     def size(self) -> tuple[int, int]:
-        return self._size
-
-    @property
-    def _size(self) -> tuple[int, int]:
         if self._use_im_values():
             return self.im.size
         return self.__size
 
-    @_size.setter
-    def _size(self, value: tuple[int, int]) -> None:
+    def _set_size(self, value: tuple[int, int]) -> None:
         # set im.size first in case it raises an exception
         if self._use_im_values():
             self.im.size = value
         self.__size = value
 
-    @property
-    def mode(self) -> str:
-        return self._mode
+    # MyPy doesn't support "x = property(...)"
+    # https://github.com/python/mypy/issues/8083
+    _size: tuple[int, int] = cast(tuple[int, int], property(fset=_set_size))
 
     @property
-    def _mode(self) -> str:
+    def mode(self) -> str:
         if self._use_im_values():
             return self.im.mode
         return self.__mode
 
-    @_mode.setter
-    def _mode(self, value: str) -> None:
+    def _set_mode(self, value: str) -> None:
         # set im.mode first in case it raises an exception
         if self._use_im_values():
             self.im.mode = value
         self.__mode = value
+
+    # MyPy doesn't support "x = property(...)"
+    # https://github.com/python/mypy/issues/8083
+    _mode: str = cast(str, property(fset=_set_mode))
 
     def _new(self, im: core.ImagingCore) -> Image:
         new = Image()

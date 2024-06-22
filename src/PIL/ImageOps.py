@@ -701,7 +701,7 @@ def exif_transpose(image: Image.Image, *, in_place: bool = False) -> Image.Image
         transposed_image = image.transpose(method)
         if in_place:
             image.im = transposed_image.im
-            image._size = transposed_image._size
+            image._size = transposed_image.size
         exif_image = image if in_place else transposed_image
 
         exif = exif_image.getexif()
