@@ -23,8 +23,7 @@ from setuptools.command.build_ext import build_ext
 def get_version():
     version_file = "src/PIL/_version.py"
     with open(version_file, encoding="utf-8") as f:
-        exec(compile(f.read(), version_file, "exec"))
-    return locals()["__version__"]
+        return f.read().split('"')[1]
 
 
 configuration = {}
@@ -38,7 +37,9 @@ IMAGEQUANT_ROOT = None
 JPEG2K_ROOT = None
 JPEG_ROOT = None
 LCMS_ROOT = None
+RAQM_ROOT = None
 TIFF_ROOT = None
+WEBP_ROOT = None
 ZLIB_ROOT = None
 FUZZING_BUILD = "LIB_FUZZING_ENGINE" in os.environ
 
@@ -460,6 +461,8 @@ class pil_build_ext(build_ext):
             "FREETYPE_ROOT": "freetype2",
             "HARFBUZZ_ROOT": "harfbuzz",
             "FRIBIDI_ROOT": "fribidi",
+            "RAQM_ROOT": "raqm",
+            "WEBP_ROOT": "libwebp",
             "LCMS_ROOT": "lcms2",
             "IMAGEQUANT_ROOT": "libimagequant",
         }.items():
@@ -1018,7 +1021,7 @@ The headers or library files could not be found for {str(err)},
 a required dependency when compiling Pillow from source.
 
 Please see the install instructions at:
-   https://pillow.readthedocs.io/en/latest/installation.html
+   https://pillow.readthedocs.io/en/latest/installation/basic-installation.html
 
 """
     sys.stderr.write(msg)
