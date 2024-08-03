@@ -334,7 +334,8 @@ class EpsImageFile(ImageFile.ImageFile):
                 else:
                     break
 
-                self._size = columns, rows
+                if not self._size:
+                    self._size = columns, rows
                 return
             elif bytes_mv[:5] == b"%%EOF":
                 break
