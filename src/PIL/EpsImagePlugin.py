@@ -121,7 +121,7 @@ def Ghostscript(
                 lengthfile -= len(s)
                 f.write(s)
 
-    device = "pngalpha" if transparency else "ppmraw"
+    device = "pngalpha" if transparency else "pnmraw"
 
     # Build Ghostscript command
     command = [
