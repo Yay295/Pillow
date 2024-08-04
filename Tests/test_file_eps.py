@@ -208,7 +208,7 @@ def test_cmyk() -> None:
 def test_showpage() -> None:
     # See https://github.com/python-pillow/Pillow/issues/2615
     with Image.open("Tests/images/eps/reqd_showpage.eps") as plot_image:
-        with Image.open("Tests/images/reqd_showpage.png") as target:
+        with Image.open("Tests/images/eps/reqd_showpage.png") as target:
             # should not crash/hang
             plot_image.load()
             # fonts could be slightly different
@@ -221,7 +221,7 @@ def test_transparency() -> None:
         plot_image.load(transparency=True)
         assert plot_image.mode == "RGBA"
 
-        with Image.open("Tests/images/reqd_showpage_transparency.png") as target:
+        with Image.open("Tests/images/eps/reqd_showpage_transparency.png") as target:
             # fonts could be slightly different
             assert_image_similar(plot_image, target, 6)
 
