@@ -47,7 +47,7 @@ ImagingHistogramNew(Imaging im) {
     h->mode[IMAGING_MODE_LENGTH - 1] = 0;
 
     h->bands = im->bands;
-    h->histogram = calloc(im->pixelsize, 256 * sizeof(long));
+    h->histogram = calloc(im->pixelsize, 256 * sizeof(*(h->histogram)));
     if (!h->histogram) {
         free(h);
         return (ImagingHistogram)ImagingError_MemoryError();
