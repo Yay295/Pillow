@@ -134,7 +134,7 @@ struct ImagingHistogramInstance {
     int bands;                      /* Number of bands (1, 3, or 4) */
 
     /* Data */
-    long *histogram; /* Histogram (bands*256 longs) */
+    UINT32 *histogram; /* Histogram (bands*256 UINT32) */
 };
 
 struct ImagingPaletteInstance {
