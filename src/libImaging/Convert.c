@@ -311,7 +311,7 @@ rgb2bgr24(UINT8 *out, const UINT8 *in, int xsize) {
 
 static void
 rgb2hsv_row(UINT8 *out, const UINT8 *in) {  // following colorsys.py
-    float h, s, rc, gc, bc, cr;
+    double h, s, rc, gc, bc, cr;
     UINT8 maxc, minc;
     UINT8 r, g, b;
     UINT8 uh, us, uv;
@@ -326,11 +326,11 @@ rgb2hsv_row(UINT8 *out, const UINT8 *in) {  // following colorsys.py
         uh = 0;
         us = 0;
     } else {
-        cr = (float)(maxc - minc);
-        s = cr / (float)maxc;
-        rc = ((float)(maxc - r)) / cr;
-        gc = ((float)(maxc - g)) / cr;
-        bc = ((float)(maxc - b)) / cr;
+        cr = (double)(maxc - minc);
+        s = cr / (double)maxc;
+        rc = ((double)(maxc - r)) / cr;
+        gc = ((double)(maxc - g)) / cr;
+        bc = ((double)(maxc - b)) / cr;
         if (r == maxc) {
             h = bc - gc;
         } else if (g == maxc) {
