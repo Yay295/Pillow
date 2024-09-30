@@ -44,4 +44,5 @@ def deterministic_hash(data: list[int]) -> bytes:
 def test_histogram(mode: str) -> None:
     h = hopper(mode).histogram()
     data = (len(h), sum(h), min(h), max(h), deterministic_hash(h))
+    print(h)
     assert data == expected_data[mode]
