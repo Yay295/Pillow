@@ -13,7 +13,7 @@ expected_data = {
     "1": (256, 16384, 0, 10994, b"zk4Al^)(jtioYSyJT@emR4<LAz}yHLJ6>*b*%R1K"),
     "CMYK": (1024, 65536, 0, 16384, b"zqm8<<;r>h42v|$3xNIR#fG2=P&z(awe2&{GK(8o"),
     "F": (256, 16384, 0, 662, b"*EIrB8n_NEx9e()#ao<>L)@gEjm|N%I8B)YhA8V~"),
-    "HSV": (768, 49152, 0, 1696, b"j%?cE2k-B?O6^F|tr1#8hhv$YoM{j;4co)RxZt#w"),
+    "HSV": (768, 49152, 0, 1696, b"pQV&1wHrT`AI}V<d!`6uVnfXZ6PVG|S#zOVn}m!;"),
     "I": (256, 16384, 0, 662, b"*EIrB8n_NEx9e()#ao<>L)@gEjm|N%I8B)YhA8V~"),
     "I;16": (256, 16384, 0, 8192, b"S+c=3i+Fs3wK2>Q<8rq@PgsAg=nE1VLdMtHZ2K8$"),
     "I;16B": (256, 16384, 0, 8192, b"S+c=3i+Fs3wK2>Q<8rq@PgsAg=nE1VLdMtHZ2K8$"),
@@ -44,5 +44,5 @@ def deterministic_hash(data: list[int]) -> bytes:
 def test_histogram(mode: str) -> None:
     h = hopper(mode).histogram()
     data = (len(h), sum(h), min(h), max(h), deterministic_hash(h))
-    print(h)
+    if mode == "HSV": print(h)
     assert data == expected_data[mode]

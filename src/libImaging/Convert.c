@@ -343,8 +343,7 @@ rgb2hsv_row(UINT8 *out, const UINT8 *in) {
         // https://stackoverflow.com/a/3883019/3878168
         // "h = (h/6.0) % 1.0" in Python can be computed as:
         h = h / 6.0;
-        h = (h - trunc(h)) + 1.0;
-        h = h - trunc(h);
+        h = h - floor(h);
 
         uh = (UINT8)(255.0 * h);
         us = 255 * color_range / maxc;
