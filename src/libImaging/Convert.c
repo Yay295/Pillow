@@ -364,7 +364,8 @@ rgb2hsv(UINT8 *out, const UINT8 *in, int xsize) {
 }
 
 static void
-hsv2rgb(UINT8 *out, const UINT8 *in, int xsize) {  // following colorsys.py
+hsv2rgb(UINT8 *out, const UINT8 *in, int xsize) {
+    // based on Python's colorsys module
 
     int p, q, t;
     UINT8 up, uq, ut;
